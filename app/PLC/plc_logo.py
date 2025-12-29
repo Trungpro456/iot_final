@@ -5,6 +5,7 @@ from pymodbus.client.sync import ModbusTcpClient
 
 
 class LogoPLC:
+    # Khởi tạo đối tượng và kết nối đén PLC LOGO
     def __init__(self, host="192.168.137.3", port=502):
         self.host = host
         self.port = port
@@ -15,7 +16,7 @@ class LogoPLC:
         print("🔌 PLC LOGO connect =", ok)
         test_client.close()
 
-    # ---------- GHI M1–M7 và M9 (bỏ M8) ----------
+    # Ghi relay M1–M7 và M9 (bỏ M8)
     def write_relay(self, relay_id, state):
         client = ModbusTcpClient(self.host, self.port)
 
@@ -42,7 +43,7 @@ class LogoPLC:
         client.close()
         return result
 
-    # ---------- ĐỌC Q1–Q8, fallback M1–M9 (bỏ M8) ----------
+    # Đọc outputs Q1–Q8, fallback M1–M9 (bỏ M8)
     def read_outputs(self):
         client = ModbusTcpClient(self.host, self.port)
 
@@ -50,7 +51,7 @@ class LogoPLC:
             print("❌ Không kết nối được PLC khi đọc outputs")
             return None
 
-        # ----- Đọc Q1..Q8 -----
+        # Đọc Q1..Q8
         r = client.read_coils(8192, 8, unit=1)
 
         if r and hasattr(r, "bits") and len(r.bits) >= 8:
@@ -60,7 +61,7 @@ class LogoPLC:
 
         print("❌ Không đọc được Q → thử đọc M")
 
-        # ----- Đọc M1..M9 -----
+        # Đọc M1..M9
         r = client.read_coils(8256, 9, unit=1)
 
         if not r or not hasattr(r, "bits") or len(r.bits) < 9:

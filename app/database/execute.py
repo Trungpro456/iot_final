@@ -114,7 +114,7 @@ class HandleDB:
             cursor.execute("SELECT PH FROM PH ORDER BY ThoiGian DESC LIMIT 1")
             row = cursor.fetchone()
             return row["PH"] if row else None
-
+# Kiểm tra tài khoản đăng nhập
     def check_login(self, username, password):
         with self.get_conn() as conn:
             cursor = conn.cursor()
@@ -124,7 +124,7 @@ class HandleDB:
             )
             row = cursor.fetchone()
             return dict(row) if row else None
-
+# Lấy dữ liệu lưu lượng
     def get_data_luu_luong(self, luongluong_id):
         with self.get_conn() as conn:
             cursor = conn.cursor()
@@ -135,6 +135,7 @@ class HandleDB:
             rows = cursor.fetchall()
             return [dict(row) for row in rows]
 
+# Lấy dữ liệu áp suất
     def get_data_apxuat(self):
         with self.get_conn() as conn:
             cursor = conn.cursor()
@@ -142,13 +143,14 @@ class HandleDB:
             rows = cursor.fetchall()
             return [dict(row) for row in rows]
 
+# Lấy dữ liệu EC
     def get_data_ec(self):
         with self.get_conn() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM EC ORDER BY ThoiGian DESC")
             rows = cursor.fetchall()
             return [dict(row) for row in rows]
-
+# Lấy dữ liệu PH
     def get_data_ph(self):
         with self.get_conn() as conn:
             cursor = conn.cursor()
@@ -156,6 +158,8 @@ class HandleDB:
             rows = cursor.fetchall()
             return [dict(row) for row in rows]
 
+
+# Lấy dữ liệu lịch sử và vẽ biểu đồ 
     def get_history_data(self, start_time=None, end_time=None, limit=20):
         # Base query helper
         def get_query(table, value_col, time_col="ThoiGian", where_clause=""):
