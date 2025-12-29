@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ thống châm phân</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+    <div class="background-container"></div>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Menu</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('web_bp.home') }}" class="nav-item active">
+                    <span>🏠</span> Trang chủ
+                </a>
+                <a href="{{ url_for('web_bp.data') }}" class="nav-item">
+                    <span>📊</span> Dữ liệu
+                </a>
+                <a href="{{ url_for('web_bp.history') }}" class="nav-item">
+                    <span>⏰</span> Lịch sử
+                </a>
+                <a href="{{ url_for('web_bp.device') }}" class="nav-item">
+                    <span>⚙️</span> Thiết bị
+                </a>
+                <a href="{{ url_for('web_bp.contact') }}" class="nav-item">
+                    <span>📞</span> Liên hệ
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="{{ url_for('web_bp.logout') }}" class="nav-item logout">
+                    <span>🚪</span> Đăng xuất
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="dashboard-container">
+                <header class="dashboard-header">
+                    <h1>Hệ thống châm phân tự động</h1>
+                    <p>Sinh viên thực hiện : 22153120 - Ngô Minh Trung , 22153111 - Nguyễn Thị Huệ Thu</p>
+                </header>
+
+                <section class="section-valves">
+                    <h2 class="section-title">Trạng thái Van</h2>
+                    <div class="valves-grid">
+                        <div class="valve-card" id="valve-card-1">
+                            <h3>Van 1</h3>
+                            <div class="status-dot" id="led-1"></div>
+                        </div>
+                        <div class="valve-card" id="valve-card-2">
+                            <h3>Van 2</h3>
+                            <div class="status-dot" id="led-2"></div>
+                        </div>
+                        <div class="valve-card" id="valve-card-3">
+                            <h3>Van 3</h3>
+                            <div class="status-dot" id="led-3"></div>
+                        </div>
+                        <div class="valve-card" id="valve-card-4">
+                            <h3>Van 4</h3>
+                            <div class="status-dot" id="led-4"></div>
+                        </div>
+                        <div class="valve-card" id="valve-card-5">
+                            <h3>Van 5</h3>
+                            <div class="status-dot" id="led-5"></div>
+                        </div>
+                        <div class="valve-card" id="valve-card-6">
+                            <h3>Van 6</h3>
+                            <div class="status-dot" id="led-6"></div>
+                        </div>
+                        <div class="valve-card" id="valve-card-7">
+                            <h3>Van 7</h3>
+                            <div class="status-dot" id="led-7"></div>
+                        </div>
+                        <div class="valve-card" id="valve-card-8">
+                            <h3>Van 8</h3>
+                            <div class="status-dot" id="led-8"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section-sensors">
+                    <h2 class="section-title">Thông số cảm biến</h2>
+                    <div class="sensors-grid">
+                        <div class="sensor-card " id="LuuLuong">
+                            <h3>Lưu lượng </h3>
+                            <div class="sensor-value">
+                                <p>Lưu lượng 1: <span id="LuuLuong1">--</span></p>
+                                <p>Lưu lượng 2: <span id="LuuLuong2">--</span></p>
+                                <p>Lưu lượng tổng: <span id="LuuLuongTong">--</span></p>
+                            </div>
+                        </div>
+                        <div class="sensor-card">
+                            <h3>Áp suất</h3>
+                            <div class="sensor-value">
+                                <p>Áp suất: <span id="ApXuat">--</span></p>
+                            </div>
+                        </div>
+                        <div class="sensor-card">
+                            <h3>Độ dẫn điện (EC)</h3>
+                            <div class="sensor-value">
+                                <p>Nồng độ: <span id="EC">--</span></p>
+                            </div>
+                        </div>
+                        <div class="sensor-card">
+                            <h3>Độ pH</h3>
+                            <div class="sensor-value">
+                                <p>Nồng độ: <span id="PH">--</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Valve Settings Modal -->
+    <div id="valve-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Cài đặt Van</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <form id="valve-form">
+                <div class="form-group">
+                    <label for="valve-mode">Chế độ vận hành</label>
+                    <div style="position: relative">
+                        <span
+                            style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;">⚙️</span>
+                        <select id="valve-mode" class="form-control" style="padding-left: 3rem; appearance: none">
+                            <option value="auto">Tự động (Auto)</option>
+                            <option value="manual">Thủ công (Manual)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <input type="hidden" id="relay-id" value="">
+
+                <div class="form-group" id="manual-controls" style="display: none;">
+                    <label>Điều khiển trực tiếp</label>
+                    <button type="button" id="toggle-valve-btn" class="btn-primary" style="width: 100%; 
+                           transition: all 0.3s ease; 
+                           font-weight: 600; 
+                           text-transform: uppercase; 
+                           margin-bottom: 1rem;
+                           cursor: pointer;
+                           border: none;">
+                        Đang tải...
+                    </button>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">
+                        * Trạng thái sẽ cập nhật ngay lập tức qua hệ thống.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Lưu chế độ</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+        integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+        crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // DOM Elements
+            const valveCards = document.querySelectorAll(".valve-card");
+            const modal = document.getElementById("valve-modal");
+            const closeBtn = document.querySelector(".close-btn");
+            const modalTitle = document.getElementById("modal-title");
+            const valveForm = document.getElementById("valve-form");
+            const modeSelect = document.getElementById("valve-mode");
+            const manualControls = document.getElementById("manual-controls");
+            const toggleBtn = document.getElementById("toggle-valve-btn");
+            const valveIdInput = document.getElementById("relay-id");
+
+            // State Management
+            let currentRelayStates = [];
+
+            // --- 1. SOCKET.IO SETUP ---
+            const socket = io("http://192.168.137.184:8000");
+
+            socket.on('connect', function () {
+                console.log('✅ Socket connected');
+            });
+
+            // Lắng nghe sự kiện thay đổi trạng thái 1 Relay
+            socket.on('relay_status', function (data) {
+                console.log('⚡ Update 1 Relay:', data);
+
+                // Chuyển đổi format dữ liệu nếu server gửi key "relay" thay vì "relay_id"
+                const formattedData = {
+                    relay_id: data.relay || data.relay_id, // Chấp nhận cả 2 trường hợp
+                    state: data.state
+                };
+
+                updateSingleValveUI(formattedData);
+                updateLocalState(formattedData);
+            });
+
+            // Lắng nghe sự kiện cập nhật tất cả Relay (thường gửi khi mới connect)
+            socket.on('relay_status_all', function (dataArray) {
+                console.log('⚡ Update All Relays:', dataArray);
+                if (Array.isArray(dataArray)) {
+                    currentRelayStates = dataArray;
+                    dataArray.forEach(relay => updateSingleValveUI(relay));
+                }
+            });
+
+            // --- 2. HÀM CẬP NHẬT UI ---
+
+            // Hàm cập nhật màu đèn LED cho 1 van cụ thể
+            function updateSingleValveUI(relay) {
+                const led = document.getElementById(`led-${relay.relay_id}`);
+                if (led) {
+                    const state = (relay.state || "").toLowerCase();
+                    if (state === "on") {
+                        led.style.backgroundColor = "var(--secondary-color)"; // Xanh
+                        led.style.boxShadow = "0 0 10px rgba(52, 211, 153, 0.5)";
+                    } else {
+                        led.style.backgroundColor = "var(--danger-color)"; // Đỏ
+                        led.style.boxShadow = "0 0 10px rgba(248, 113, 113, 0.5)";
+                    }
+                }
+
+                // Nếu Modal đang mở đúng cái van này, cập nhật luôn nút bấm trong Modal
+                if (!modal.classList.contains("hidden") && valveIdInput.value == relay.relay_id) {
+                    updateModalButtonState(relay.state);
+                }
+            }
+
+            // Hàm cập nhật biến lưu trữ local
+            function updateLocalState(newData) {
+                const index = currentRelayStates.findIndex(r => r.relay_id == newData.relay_id);
+                if (index !== -1) {
+                    currentRelayStates[index] = { ...currentRelayStates[index], ...newData };
+                } else {
+                    currentRelayStates.push(newData);
+                }
+            }
+            // Hàm cập nhật giao diện nút bấm trong Modal
+            function updateModalButtonState(state) {
+                const stateLower = (state || "").toLowerCase();
+
+                // Kiểm tra trạng thái để quyết định màu sắc
+                if (stateLower === "on") {
+                    // Trạng thái Đang Bật -> Nút hiện chữ "Tắt" và màu Đỏ
+                    toggleBtn.innerText = "Tắt thiết bị";
+                    toggleBtn.style.backgroundColor = "var(--danger-color)";
+                    toggleBtn.style.color = "white";
+                    toggleBtn.style.border = "none";
+                } else {
+                    // Trạng thái Đang Tắt -> Nút hiện chữ "Bật" và màu Xanh lá
+                    toggleBtn.innerText = "Bật thiết bị";
+                    toggleBtn.style.backgroundColor = "var(--secondary-color)";
+                    toggleBtn.style.color = "white";
+                    toggleBtn.style.border = "none";
+                }
+
+                // Thêm hiệu ứng chuyển màu mượt mà
+                toggleBtn.style.transition = "background-color 0.3s ease";
+            }
+            // --- 3. MODAL LOGIC ---
+
+            // Mở Modal khi click vào Card
+            valveCards.forEach((card) => {
+                card.addEventListener("click", function () {
+                    const valveId = this.id.split("-").pop(); // Lấy ID từ id="valve-card-1"
+                    const valveName = this.querySelector("h3").innerText;
+
+                    valveIdInput.value = valveId;
+                    modalTitle.innerText = `Cài đặt ${valveName}`;
+
+                    const relay = currentRelayStates.find((r) => r.relay_id == valveId);
+
+                    if (relay) {
+                        // Set Chế độ (Auto/Manual)
+                        const modeLower = (relay.mode || "").toLowerCase();
+                        if (modeLower.includes("tự động") || modeLower === "auto") {
+                            modeSelect.value = "auto";
+                            manualControls.style.display = "none";
+                        } else {
+                            modeSelect.value = "manual";
+                            manualControls.style.display = "block";
+                            // Cập nhật nút Bật/Tắt theo trạng thái hiện tại
+                            updateModalButtonState(relay.state);
+                        }
+                    }
+                    modal.classList.remove("hidden");
+                });
+            });
+
+            // Xử lý thay đổi Dropdown chế độ
+            if (modeSelect) {
+                modeSelect.addEventListener("change", function () {
+                    if (this.value === "manual") {
+                        manualControls.style.display = "block";
+                        // Cập nhật lại trạng thái nút bấm cho đúng với thực tế khi vừa chuyển qua manual
+                        const valveId = valveIdInput.value;
+                        const relay = currentRelayStates.find((r) => r.relay_id == valveId);
+                        if (relay) updateModalButtonState(relay.state);
+                    } else {
+                        manualControls.style.display = "none";
+                    }
+                });
+            }
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener("click", function () {
+                    const valveId = valveIdInput.value;
+                    if (!valveId) return;
+
+                    const relay = currentRelayStates.find(
+                        r => String(r.relay_id) === String(valveId)
+                    );
+
+                    const currentState = relay ? (relay.state || "").toLowerCase() : "off";
+                    const newState = currentState === "on" ? "OFF" : "ON";
+
+                    /* ===============================
+                       1️⃣ UPDATE UI NGAY LẬP TỨC
+                    =============================== */
+                    const optimisticData = {
+                        relay_id: valveId,
+                        state: newState
+                    };
+
+                    updateSingleValveUI(optimisticData);
+                    updateLocalState(optimisticData);
+
+                    /* ===============================
+                       2️⃣ GỬI SOCKET TOGGLE
+                    =============================== */
+                    if (socket && socket.connected) {
+                        socket.emit("toggle_relay", {
+                            relay_id: valveId,
+                            state: newState
+                        });
+                        console.log(`🚀 toggle_relay → Van ${valveId}: ${newState}`);
+                    } else {
+                        alert("❌ Mất kết nối Socket");
+                    }
+
+                    /* ===============================
+                       3️⃣ ĐÓNG MODAL
+                    =============================== */
+                    modal.classList.add("hidden");
+                });
+            }
+            // Đóng Modal
+            if (closeBtn) {
+                closeBtn.addEventListener("click", () => modal.classList.add("hidden"));
+            }
+            window.addEventListener("click", (e) => {
+                if (e.target === modal) modal.classList.add("hidden");
+            });
+
+            // Lưu chế độ (Form Submit)
+            if (valveForm) {
+                valveForm.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const mode = modeSelect.value;
+                    const valveId = valveIdInput.value;
+                    const dbMode = mode === "auto" ? "Tự động" : "Thủ công";
+
+                    fetch("/api/update_relay_mode_db", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ relay_id: valveId, mode: dbMode }),
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            console.log(`Saved mode for Valve ${valveId}: ${dbMode}`);
+                            // Sau khi lưu, cập nhật lại dữ liệu mới nhất
+                            fetchValveStates();
+                            modal.classList.add("hidden");
+                        })
+                        .catch((error) => console.error("Error saving mode:", error));
+                });
+            }
+
+            // --- 4. API FETCHING (POLLING CHO CẢM BIẾN & FALLBACK CHO RELAY) ---
+
+            function updateSensorData() {
+                // Fetch Lưu lượng
+                fetch("/api/latest_luuluong_1_2_and_total")
+                    .then(r => r.json())
+                    .then(data => {
+                        if (document.getElementById("LuuLuong1") && data.luu_luong_1)
+                            document.getElementById("LuuLuong1").innerText = (data.luu_luong_1.TongLuuLuong || "--") + " L/P";
+                        if (document.getElementById("LuuLuong2") && data.luu_luong_2)
+                            document.getElementById("LuuLuong2").innerText = (data.luu_luong_2.TongLuuLuong || "--") + " L/P";
+                        if (document.getElementById("LuuLuongTong"))
+                            document.getElementById("LuuLuongTong").innerText = (data.tong_luu_luong || "--") + " L/P";
+                    }).catch(e => console.error(e));
+
+                // Fetch Áp suất
+                fetch("/api/latest_apxuat")
+                    .then(r => r.json())
+                    .then(data => {
+                        const el = document.getElementById("ApXuat");
+                        if (el) el.innerText = (data !== null ? data : "--") + " bar";
+                    }).catch(e => console.error(e));
+
+                // Fetch EC
+                fetch("/api/latest_ec")
+                    .then(r => r.json())
+                    .then(data => {
+                        const el = document.getElementById("EC");
+                        if (el) el.innerText = (data !== null ? data : "--") + " mS/cm";
+                    }).catch(e => console.error(e));
+
+                // Fetch pH
+                fetch("/api/latest_ph")
+                    .then(r => r.json())
+                    .then(data => {
+                        const el = document.getElementById("PH");
+                        if (el) el.innerText = (data !== null ? parseFloat(data).toFixed(2) : "--") + " pH";
+                    }).catch(e => console.error(e));
+            }
+
+            // Fetch Valve States (Fallback nếu Socket lỡ bị miss hoặc dùng để init ban đầu)
+            function fetchValveStates() {
+                fetch("/api/relay_state")
+                    .then(r => r.json())
+                    .then(data => {
+                        currentRelayStates = data;
+                        data.forEach(relay => updateSingleValveUI(relay));
+                    })
+                    .catch(e => console.error("Error fetching valve states:", e));
+            }
+
+            // --- INIT ---
+            updateSensorData();
+            fetchValveStates(); // Lấy trạng thái ban đầu qua API
+
+            // Polling: Cảm biến (3s/lần)
+            setInterval(updateSensorData, 3000);
+
+            // Polling: Van (Có thể giảm tần suất xuống 10s/lần hoặc bỏ hẳn nếu tin tưởng Socket)
+            // Giữ lại để đảm bảo đồng bộ nếu mất kết nối socket
+            setInterval(fetchValveStates, 10000);
+        });
+    </script>
+</body>
+
+</html>

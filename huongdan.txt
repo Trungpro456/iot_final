@@ -1,0 +1,22 @@
+Tạo venv 
+python -m venv .venv
+
+Kích hoạt venv
+source venv/bin/activate
+
+Khởi tạo database 
+python init_db.py
+
+Chạy app
+python run.py
+
+truy cập vào trang web tại login 
+http://192.168.137.184:8000/login
+
+username : admin
+password ; admin123
+
+màn hình tự chuyến sang trang chủ
+
+
+
